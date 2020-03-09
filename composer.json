@@ -1,0 +1,25 @@
+{
+    "name": "needham/model-doc",
+    "description": "Create stubs for Laravel models, based on DB.",
+    "authors": [
+        {
+            "name": "John Needham",
+            "email": "john.needham2@gmail.com"
+        }
+    ],
+    "require": {
+        "doctrine/dbal": "2.10.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Needham\\ModelDoc\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Needham\\ModelDoc\\ServiceProvider"
+            ]
+        }
+    }
+}
