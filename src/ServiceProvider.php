@@ -3,6 +3,7 @@
 namespace Needham\ModelDoc;
 
 use Needham\ModelDoc\Commands\DocModel;
+use Needham\ModelDoc\Commands\TagModel;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -20,7 +21,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                DocModel::class
+                DocModel::class,
+                TagModel::class
             ]);
         }
         $this->loadViewsFrom(

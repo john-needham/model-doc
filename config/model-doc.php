@@ -2,7 +2,7 @@
 
 return [
     'stubs' => './stubs',
-    'paths' => [
+    'namespaces' => [
         /**
          * Define namespace here
          */

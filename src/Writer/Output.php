@@ -4,6 +4,7 @@ namespace Needham\ModelDoc\Writer;
 
 use Illuminate\Support\Facades\Storage;
 use Needham\ModelDoc\Doc;
+use Needham\ModelDoc\Namespaced;
 
 class Output
 {
@@ -18,27 +19,34 @@ class Output
     }
 
     /**
+     * @param Namespaced $ns
+     * @return string
+     */
+    protected function getStubFile(Namespaced $ns) {
+        $parts = $ns->getNamespace();
+        array_unshift($parts, $this->path);
+        $path = implode(DIRECTORY_SEPARATOR, $parts);
+        $file = sprintf('%s.php', $ns->getClass());
+        return $path = implode(DIRECTORY_SEPARATOR, [$path, $file]);
+    }
+
+    /**
      * @param Doc $doc
      */
     public function write(Doc $doc) {
-        $file = implode(
-            '/', [
-                $this->path,
-                $doc->getNamespace(),
-                $doc->getClassName()
-            ]
-        ) . '.php';
+
+        $class = $doc->getNamespaced();
+        $file = $this->getStubFile($class);
 
         if(strpos($this->path, '.') === 0) {
             $file = base_path() . '/' . $file;
         }
 
-        $contents = view('stubs::model', [
-            'doc' => $doc
+        $contents = view('stubs::class', [
+            'source' => $class,
+            'stub'   => $class->withAppendedNamespace('Stubs'),
+            'doc'    => $doc
         ]);
-        // $stub = (string) $inline;
-
-        $contents = "<?php\n\n".$contents;
 
         file_put_contents($file, $contents);
     }

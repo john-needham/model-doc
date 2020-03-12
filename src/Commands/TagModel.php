@@ -7,22 +7,23 @@ use Needham\ModelDoc\Database\Inspector;
 use Needham\ModelDoc\Doc;
 use Needham\ModelDoc\Models\Discovery;
 use Needham\ModelDoc\Writer\Output;
+use Needham\ModelDoc\Writer\Tagger;
 
-class DocModel extends Command
+class TagModel extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'doc:model';
+    protected $signature = 'doc:tag';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Document all models';
+    protected $description = 'Tag all models';
     /**
      * @var Discovery
      */
@@ -46,7 +47,7 @@ class DocModel extends Command
     public function __construct(
         Discovery $discovery,
         Inspector $inspector,
-        Output $writer
+        Tagger $writer
     )
     {
         parent::__construct();
@@ -62,19 +63,14 @@ class DocModel extends Command
      */
     public function handle()
     {
-        $models = $this->discovery->fetchModels();
+        $models = $this->discovery->fetchHasStubDoc();
 
         /**
-         * Go through each model and find whats on its DB schema
+         * Go through each model and attach the stub docblock
          */
         foreach ($models as $model) {
-            $attributes = $this->inspector->inspect($model);
 
-            $doc = new Doc($model, $attributes);
-
-            if (count($attributes)) {
-                $this->writer->write($doc);
-            }
+            $this->writer->tag($model);
         }
     }
 }

@@ -9,14 +9,9 @@ namespace Needham\ModelDoc;
 class Doc
 {
     /**
-     * @var string
+     * @var Namespaced
      */
-    protected $name;
-
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected $namespaced;
 
     /**
      * @var array
@@ -31,36 +26,30 @@ class Doc
     /**
      * Doc constructor.
      * @param string $name
-     * @param string $namespace
      * @param array $attributes
+     * @throws \ReflectionException
      */
     public function __construct(string $name, array $attributes = [])
     {
         $this->source = $name;
-        $namespace = null;
-        try {
-            $class = (new \ReflectionClass($name));
-            $name = $class->getShortName();
-            $namespace = $class->getNamespaceName();
-        } catch (\ReflectionException $e) {
-            // ..
-        }
-
-        $this->name = $name;
-        $this->namespace = $namespace;
+        $this->namespaced = Namespaced::create($name);
         $this->attributes = $attributes;
     }
 
     public function getSource() : string  {
-        $this->name;
+        $this->source;
     }
 
     public function getClassName() : string {
-        return $this->name;
+        return $this->namespaced->getClass();
     }
 
     public function getNamespace() : string {
-        return $this->namespace;
+        return $this->namespaced->getNamespaceString();
+    }
+
+    public function getNamespaced() : Namespaced {
+        return $this->namespaced;
     }
 
     public function getAttributes() : array {
